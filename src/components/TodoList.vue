@@ -2,6 +2,7 @@
 import TodoListItem from "./TodoListItem.vue";
 
 const props = defineProps(["title", "todos"]);
+const emits = defineEmits(["toggle-complete"]);
 </script>
 
 <template>
@@ -9,7 +10,12 @@ const props = defineProps(["title", "todos"]);
     <h2 class="todo-list-title">{{ props.title }}</h2>
 
     <div class="todo-list-items">
-      <TodoListItem v-for="todo in props.todos" :key="todo.id" :todo="todo" />
+      <TodoListItem
+        @toggle-complete="(todo) => $emit('toggle-complete', todo)"
+        v-for="todo in props.todos"
+        :key="todo.id"
+        :todo="todo"
+      />
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@ import TodoCreate from "./components/TodoCreate.vue";
 import TodoDate from "./components/TodoDate.vue";
 import TodoList from "./components/TodoList.vue";
 
-const todo = ref([
+const currentTodos = ref([
   {
     id: 1,
     text: "drink some tea",
@@ -16,18 +16,34 @@ const todo = ref([
     isCompleted: false,
   },
 ]);
-const completed = ref([
+const completedTodos = ref([
   {
-    id: 1,
+    id: 3,
     text: "drink some tea",
     isCompleted: true,
   },
   {
-    id: 2,
+    id: 4,
     text: "finish todolist app",
     isCompleted: true,
   },
 ]);
+
+const complete = (toggledTodo) => {
+  currentTodos.value = currentTodos.value.filter(
+    (currentTodo) => currentTodo.id !== toggledTodo.id
+  );
+  toggledTodo.isCompleted = true;
+  completedTodos.value.push(toggledTodo);
+};
+
+const uncomplete = (toggledTodo) => {
+  completedTodos.value = completedTodos.value.filter(
+    (completedTodo) => completedTodo.id !== toggledTodo.id
+  );
+  toggledTodo.isCompleted = false;
+  currentTodos.value.push(toggledTodo);
+};
 </script>
 
 <template>
@@ -36,8 +52,18 @@ const completed = ref([
 
     <TodoCreate />
 
-    <TodoList v-if="todo.length" :title="'TO DO'" :todos="todo" />
-    <TodoList v-if="completed.length" :title="'COMPLETED'" :todos="completed" />
+    <TodoList
+      v-if="currentTodos.length"
+      @toggle-complete="(todo) => complete(todo)"
+      :title="'TO DO'"
+      :todos="currentTodos"
+    />
+    <TodoList
+      v-if="completedTodos.length"
+      @toggle-complete="(todo) => uncomplete(todo)"
+      :title="'COMPLETED'"
+      :todos="completedTodos"
+    />
   </div>
 </template>
 

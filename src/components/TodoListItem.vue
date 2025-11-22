@@ -1,5 +1,6 @@
 <script setup>
 const props = defineProps(["todo"]);
+const emits = defineEmits(["toggle-complete"]);
 </script>
 
 <template>
@@ -10,6 +11,7 @@ const props = defineProps(["todo"]);
       name=""
       id=""
       :checked="props.todo.isCompleted"
+      @change="$emit('toggle-complete', props.todo)"
     />
 
     <p
