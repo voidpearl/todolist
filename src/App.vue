@@ -1,33 +1,27 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import TodoCreate from "./components/TodoCreate.vue";
 import TodoDate from "./components/TodoDate.vue";
 import TodoList from "./components/TodoList.vue";
+import {
+  getCompletedTodos,
+  getCurrentTodos,
+  saveCompletedTodos,
+  saveCurrentTodos,
+} from "./utils/local-storage.utils";
 
-const currentTodos = ref([
-  {
-    id: 1,
-    text: "drink some tea",
-    isCompleted: false,
-  },
-  {
-    id: 2,
-    text: "finish todolist app",
-    isCompleted: false,
-  },
-]);
-const completedTodos = ref([
-  {
-    id: 3,
-    text: "drink some tea",
-    isCompleted: true,
-  },
-  {
-    id: 4,
-    text: "finish todolist app",
-    isCompleted: true,
-  },
-]);
+const maxId = ref(0);
+const currentTodos = ref([]);
+const completedTodos = ref([]);
+
+onMounted(() => {
+  currentTodos.value = getCurrentTodos();
+  completedTodos.value = getCompletedTodos();
+
+  maxId.value = [...currentTodos.value, ...completedTodos.value].reduce((acc, curr) => {
+    return acc > curr.id ? acc : curr.id;
+  }, 0);
+});
 
 const complete = (toggledTodo) => {
   currentTodos.value = currentTodos.value.filter(
@@ -35,6 +29,9 @@ const complete = (toggledTodo) => {
   );
   toggledTodo.isCompleted = true;
   completedTodos.value.push(toggledTodo);
+
+  saveCurrentTodos(currentTodos.value);
+  saveCompletedTodos(completedTodos.value);
 };
 
 const uncomplete = (toggledTodo) => {
@@ -43,19 +40,19 @@ const uncomplete = (toggledTodo) => {
   );
   toggledTodo.isCompleted = false;
   currentTodos.value.push(toggledTodo);
+
+  saveCurrentTodos(currentTodos.value);
+  saveCompletedTodos(completedTodos.value);
 };
 
 const createTodo = (todoText) => {
-  const maxId = [...currentTodos.value, ...completedTodos.value].reduce(
-    (acc, curr) => (acc > curr.id ? acc : curr.id),
-    0
-  );
-
   currentTodos.value.push({
-    id: maxId + 1,
+    id: ++maxId.value,
     text: todoText,
     isCompleted: false,
   });
+
+  saveCurrentTodos(currentTodos.value);
 };
 </script>
 
@@ -109,7 +106,7 @@ const createTodo = (todoText) => {
 body {
   background-color: #222642;
 
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+    Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 </style>

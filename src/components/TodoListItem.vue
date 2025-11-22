@@ -8,8 +8,6 @@ const emits = defineEmits(["toggle-complete"]);
     <input
       class="todo-list-item-checkbox"
       type="checkbox"
-      name=""
-      id=""
       :checked="props.todo.isCompleted"
       @change="$emit('toggle-complete', props.todo)"
     />

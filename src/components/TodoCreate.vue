@@ -15,12 +15,7 @@ const createTodo = () => {
 
 <template>
   <div class="todo-create">
-    <input
-      class="todo-create-input"
-      v-model="value"
-      type="text"
-      placeholder="Add a task..."
-    />
+    <input class="todo-create-input" v-model="value" type="text" placeholder="Add a task..." />
 
     <button class="todo-create-button" @click="createTodo">+</button>
   </div>
