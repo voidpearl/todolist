@@ -44,13 +44,26 @@ const uncomplete = (toggledTodo) => {
   toggledTodo.isCompleted = false;
   currentTodos.value.push(toggledTodo);
 };
+
+const createTodo = (todoText) => {
+  const maxId = [...currentTodos.value, ...completedTodos.value].reduce(
+    (acc, curr) => (acc > curr.id ? acc : curr.id),
+    0
+  );
+
+  currentTodos.value.push({
+    id: maxId + 1,
+    text: todoText,
+    isCompleted: false,
+  });
+};
 </script>
 
 <template>
   <div class="container todo-app">
     <TodoDate />
 
-    <TodoCreate />
+    <TodoCreate @create-todo="createTodo" />
 
     <TodoList
       v-if="currentTodos.length"

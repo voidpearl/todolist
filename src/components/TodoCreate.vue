@@ -1,8 +1,28 @@
+<script setup>
+import { ref } from "vue";
+
+const emits = defineEmits(["create-todo"]);
+
+const value = ref("");
+
+const createTodo = () => {
+  if (value.value) {
+    emits("create-todo", value.value);
+    value.value = "";
+  }
+};
+</script>
+
 <template>
   <div class="todo-create">
-    <input class="todo-create-input" type="text" placeholder="Add a task..." />
+    <input
+      class="todo-create-input"
+      v-model="value"
+      type="text"
+      placeholder="Add a task..."
+    />
 
-    <button class="todo-create-button">+</button>
+    <button class="todo-create-button" @click="createTodo">+</button>
   </div>
 </template>
 
